@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:pGameboyX"
+        x:Class="pGameboyX.MainWindow"
+        Width="1024"
+        Height="1024"
+        Title="pGameboyX">
+
+   <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Menu -->
+            <RowDefinition Height="*"/>   <!-- NES-display -->
+            <RowDefinition Height="Auto"/> <!-- Statusf�lt -->
+        </Grid.RowDefinitions>
+
+        <!-- Meny -->
+        <Menu Grid.Row="0">
+            <MenuItem x:Name="FileMenu" Header="File">
+                <MenuItem Header="Open" Click="Open_Click"/>
+                <MenuItem Header="Exit" Click="Exit_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="ResetMenu" Header="Reset" Click="Reset_Click"/>
+            <MenuItem x:Name="OptionsMenu" Header="Options">
+                <MenuItem x:Name="Interpolation" Header="Interpolation">
+                    <MenuItem x:Name="InterpolationNone" Header="None" Tag="None" Click="Interpolation_OnClick"/>
+                    <MenuItem x:Name="InterpolationLow" Header="Low Quality" Tag="Low" Click="Interpolation_OnClick"/>
+                    <MenuItem x:Name="InterpolationHigh" Header="High Quality" Tag="High" Click="Interpolation_OnClick"/>
+                </MenuItem>
+            </MenuItem>
+            
+        </Menu>
+
+        <!-- NES-display -->
+        <local:GameboyBitmapControl x:Name="NesView" Focusable="True" Grid.Row="1"></local:GameboyBitmapControl>
+                      
+
+        <!-- Statusf�lt-->
+        <Border Grid.Row="2" Background="#EEE" BorderBrush="#AAA" BorderThickness="1" Padding="6,2">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                <TextBlock x:Name="RomNameText" Text="No Rom Loaded" VerticalAlignment="Center" Foreground="Black"/>
+                <Border Grid.Column="1"/>
+                <TextBlock Grid.Column="2" x:Name="StateText" Margin="10,0" Text="Selected State : 0" VerticalAlignment="Center" Foreground="Black"/>
+                <TextBlock Grid.Column="3" x:Name="FpsText" Text="Emulator FPS: 000" VerticalAlignment="Center" HorizontalAlignment="Left" Width="140" Foreground="Black"/>
+                <TextBlock Grid.Column="4" x:Name="FpsRedrawText" Text="Redraw FPS: 000" VerticalAlignment="Center" HorizontalAlignment="Left" Width="120" Foreground="Black"/>
+            </Grid>
+        </Border> 
+    </Grid>
+</Window>
