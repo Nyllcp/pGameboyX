@@ -94,12 +94,12 @@ namespace pGameboyX
 
             if (e.Key == Key.Q)
             {
-                //_nes.SelectedState--;
+                _gb.SelectedSavestate--;
             }
 
             if (e.Key == Key.W)
             {
-                //_nes.SelectedState++;
+                _gb.SelectedSavestate++;
             }
 
             if (e.Key == Key.R)

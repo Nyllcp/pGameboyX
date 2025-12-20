@@ -81,7 +81,7 @@ namespace pGameboyX
                     _reader = new BinaryReader(_ms);
                 }
             }
-            else if (Path.GetExtension(filename) == ".gb" ||Path.GetExtension(filename) == ".gbc")
+            else if (Path.GetExtension(filename.ToLower()) == ".gb" || Path.GetExtension(filename.ToLower()) == ".gbc")
             {
                 _reader = new BinaryReader(File.Open(filename, FileMode.Open));
             }          

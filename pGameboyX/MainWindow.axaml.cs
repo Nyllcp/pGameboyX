@@ -65,7 +65,7 @@ public partial class MainWindow : Window
             FpsRedrawText.Text = "Blit FPS:";
 
             //using var stream = File.OpenRead("pNesX_title.bmp"); 
-            //NesView.SetBitmapFromStream(stream);
+            //GameView.SetBitmapFromStream(stream);
 
         }
 
@@ -92,12 +92,12 @@ public partial class MainWindow : Window
             var files = await topLevel.StorageProvider.OpenFilePickerAsync(
                 new FilePickerOpenOptions
                 {
-                    Title = "Open NES ROM",
+                    Title = "Open Gameboy/Gameboy Color ROM",
                     AllowMultiple = false,
                     SuggestedStartLocation = _lastFolder,
-                    FileTypeFilter = [ new FilePickerFileType("NES ROMs")
+                    FileTypeFilter = [ new FilePickerFileType("GB/GBC ROMs")
                     {
-                        Patterns = [ "*.nes", "*.zip" ]
+                        Patterns = [ "*.gb","*.gbc","*.GB","*.GBC", "*.zip" ]
                     }]
       
                 });
@@ -259,8 +259,8 @@ public partial class MainWindow : Window
                     }
                     Dispatcher.UIThread.Post(() =>
                     {
-                        NesView.UpdateFrame(frame);
-                        //StateText.Text = $"Selected State : {_nes.SelectedState}";
+                        GameView.UpdateFrame(frame);
+                        StateText.Text = $"Selected State : {_gb.SelectedSavestate}";
 
                     });
                 }
@@ -270,8 +270,8 @@ public partial class MainWindow : Window
                 if (now - lastTime > 1000)
                 {
                     lastTime = now;
-                    var redrawFps = NesView.redrawFrames;
-                    NesView.redrawFrames = 0;
+                    var redrawFps = GameView.redrawFrames;
+                    GameView.redrawFrames = 0;
 
                     Dispatcher.UIThread.Post(() =>
                     {
@@ -290,9 +290,9 @@ public partial class MainWindow : Window
 
             switch (tag)
             {
-                case "None": NesView.InterpolationMode(BitmapInterpolationMode.None); break;
-                case "Low": NesView.InterpolationMode(BitmapInterpolationMode.LowQuality); break;
-                case "High": NesView.InterpolationMode(BitmapInterpolationMode.HighQuality); break;
+                case "None": GameView.InterpolationMode(BitmapInterpolationMode.None); break;
+                case "Low": GameView.InterpolationMode(BitmapInterpolationMode.LowQuality); break;
+                case "High": GameView.InterpolationMode(BitmapInterpolationMode.HighQuality); break;
             }
   
         }

@@ -57,7 +57,14 @@ namespace pGameboyX
         public bool GbcMode { get { return gbcMode; } set { gbcMode = value; } }
         public bool SaveState { get { return saveState; } set { saveState = value; } }
         public bool LoadState { get { return loadState; } set { loadState = value; } }
-        public int SelectedSavestate { get { return selectedSavestate; } set { selectedSavestate = value > 9 ? 9 : value; } }
+        public int SelectedSavestate { get { return selectedSavestate; }
+            set
+            {
+                value = value > 9 ? 9 : value;
+                value = value < 0 ? 0 : value;
+                selectedSavestate = value;
+            } 
+        }
         public int LastCycles { get { return lastCycles; } set { lastCycles = value; } }
 
         public Core()

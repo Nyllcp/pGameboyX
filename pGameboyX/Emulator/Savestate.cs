@@ -91,7 +91,7 @@ namespace pGameboyX
         //APU
         public int soundCycles = 0;
         public int frameSequenceStep = 0;
-        public byte[] Samples = new byte[2048]; // Abit more then a frame worth of samples. 44100 / 60 = 735. 2 bytes per sample 1470 bytes..
+        //public byte[] Samples = new byte[2048]; // Abit more then a frame worth of samples. 44100 / 60 = 735. 2 bytes per sample 1470 bytes..
         public int NumberOfSamples = 0;
 
         public byte channelCtrlReg = 0;

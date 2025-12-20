@@ -406,10 +406,10 @@ namespace pGameboyX
 
         public void WriteSaveState(ref Savestate state)
         {
-            Array.Copy(Samples, state.Samples, Samples.Length);
+            //Array.Copy(Samples, state.Samples, Samples.Length);
             state.soundCycles = soundCycles;
             state.frameSequenceStep = frameSequenceStep;
-            state.NumberOfSamples = NumberOfSamples;
+            //state.NumberOfSamples = NumberOfSamples;
             state.channelCtrlReg = channelCtrlReg;
             state.soundOutputReg = soundOutputReg;
             state.soundEnabled = soundEnabled;
@@ -420,7 +420,7 @@ namespace pGameboyX
         }
         public void LoadSaveState(Savestate state)
         {
-            Array.Copy(state.Samples, Samples, Samples.Length);
+            //Array.Copy(state.Samples, Samples, Samples.Length);
             soundCycles = state.soundCycles;
             frameSequenceStep = state.frameSequenceStep;
             NumberOfSamples = state.NumberOfSamples;

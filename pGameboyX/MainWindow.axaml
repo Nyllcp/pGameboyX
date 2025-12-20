@@ -31,7 +31,7 @@
         </Menu>
 
         <!-- NES-display -->
-        <local:GameboyBitmapControl x:Name="NesView" Focusable="True" Grid.Row="1"></local:GameboyBitmapControl>
+        <local:GameboyBitmapControl x:Name="GameView" Focusable="True" Grid.Row="1"></local:GameboyBitmapControl>
                       
 
         <!-- Statusf�lt-->
