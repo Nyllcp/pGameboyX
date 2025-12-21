@@ -389,7 +389,8 @@ namespace pGameboyX
                     }
                     else
                     {
-                        scanlinebuffer[0, pixelplace] = bgPallete[pixel];
+                        var bgpixel = pixel |= 0x20;
+                        scanlinebuffer[0, pixelplace] = bgpixel;
                     }
 
                 }
@@ -456,7 +457,8 @@ namespace pGameboyX
                         }
                         else
                         {
-                            scanlinebuffer[0, pixelplace] = bgPallete[pixel];
+                            var bgpixel = pixel |= 0x20;
+                            scanlinebuffer[0, pixelplace] = bgpixel;
                         }
                     }
                 }
@@ -522,7 +524,8 @@ namespace pGameboyX
                                 renderpixel = true;
                                 if (pixel == 0) renderpixel = false;
 
-                                if (priority && scanlinebuffer[0, pixelplace] != 0) { renderpixel = false; }
+                                if (priority && (scanlinebuffer[0, pixelplace] & 0x20) != 0 && (scanlinebuffer[0, pixelplace] & 0x3) != 0) { renderpixel = false; }
+                                if ((scanlinebuffer[0, pixelplace] & 0x80) != 0) {renderpixel = false;}
                                 if (gbcMode)
                                 {
                                     if (((scanlinebuffer[1, pixelplace] >> 7) & 1) != 0) { renderpixel = false; } // bg prio flag packed with pallete byte
@@ -540,7 +543,10 @@ namespace pGameboyX
                                     }
                                     else
                                     {
-                                        scanlinebuffer[0, pixelplace] = (flags & 0x10) == 0x10 ? obj1Pallete[pixel] : obj0Pallete[pixel];
+                                        byte spirtePixel = pixel;
+                                        spirtePixel |= 0x80; // is sprite flag packed with palette byte    
+                                        spirtePixel |= (byte)((flags & 0x10) == 0x10 ? 0x40 : 0);
+                                        scanlinebuffer[0, pixelplace] = spirtePixel;
                                     }
 
                                 }
@@ -552,6 +558,8 @@ namespace pGameboyX
                 }
             }
 
+  
+
             for(int i = 0; i < LCD_width; i++)
             {
                 if (gbcMode)
@@ -560,7 +568,18 @@ namespace pGameboyX
                 }
                 else
                 {
-                    _framebufferRGB[i + (ly * LCD_width)] = Get32bitRGB(scanlinebuffer[0, i], 0);
+
+                    var pixel = scanlinebuffer[0, i];
+                    if ((pixel & 0x20) != 0) // is bg
+                    {
+                        pixel = bgPallete[pixel & 0x3];
+                    }
+                    else
+                    {
+                        pixel = (pixel & 0x40) != 0 ? obj1Pallete[pixel & 0x3] : obj0Pallete[pixel & 0x3];
+
+                    }
+                    _framebufferRGB[i + (ly * LCD_width)] = Get32bitRGB(pixel, 0);
                 }
             }
 
@@ -686,7 +705,7 @@ namespace pGameboyX
                 uint red = (uint)(low & 0x1F) * 8;
                 uint green = (uint)((low >> 5 | (high & 0x3) << 3) & 0x1F) * 8;
                 uint blue = (uint)((high >> 2) & 0x1F) * 8;
-                value |= (red | (green << 8) | (blue << 16));
+                value |= (blue | (green << 8) | (red << 16));
                 return value;
             }
             else
