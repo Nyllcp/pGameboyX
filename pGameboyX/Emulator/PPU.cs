@@ -109,6 +109,11 @@ namespace pGameboyX
         {
             _core = core;
             gbcMode = _core.GbcMode;
+            for (int i = 0; i < gbcBgPalette.Length; i++)
+            {
+                gbcBgPalette[i] = 0xFF;
+                gbcObjPalette[i] = 0xFF;
+            }
         }
         public void LcdTick()
         {
@@ -637,7 +642,7 @@ namespace pGameboyX
                 if (((bgPaletteIndex >> 7) & 1) != 0)
                 {
                     bgPaletteIndex++;
-                    bgPaletteIndex |= 0x80;
+                    //bgPaletteIndex |= 0x80;
                 }
             }
             else
@@ -646,7 +651,7 @@ namespace pGameboyX
                 if (((objPaletteIndex >> 7) & 1) != 0)
                 {
                     objPaletteIndex++;
-                    objPaletteIndex |= 0x80;
+                    //objPaletteIndex |= 0x80;
                 }
             }
         }
@@ -702,9 +707,13 @@ namespace pGameboyX
 
 
                 uint value = 0xFF000000;
-                uint red = (uint)(low & 0x1F) * 8;
-                uint green = (uint)((low >> 5 | (high & 0x3) << 3) & 0x1F) * 8;
-                uint blue = (uint)((high >> 2) & 0x1F) * 8;
+                uint red5 = (uint)(low & 0x1F);
+                uint green5 = (uint)((low >> 5 | (high & 0x3) << 3) & 0x1F);
+                uint blue5 = (uint)((high >> 2) & 0x1F);
+
+                uint red = (red5 << 3 | red5 >> 2);
+                uint green = (green5 << 3 | green5 >> 2);
+                uint blue = (blue5 << 3 | blue5 >> 2);
                 value |= (blue | (green << 8) | (red << 16));
                 return value;
             }
