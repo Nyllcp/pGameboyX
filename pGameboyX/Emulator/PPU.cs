@@ -389,7 +389,8 @@ namespace pGameboyX
                     {
                         bgpalleteno |= 1 << 6;
                         if (bgpriority) bgpalleteno |= 1 << 7;
-                        scanlinebuffer[0, pixelplace] = pixel;
+                        var bgpixel = pixel |= 0x20;
+                        scanlinebuffer[0, pixelplace] = bgpixel;
                         scanlinebuffer[1, pixelplace] = bgpalleteno;
                     }
                     else
@@ -457,7 +458,8 @@ namespace pGameboyX
                         {
                             bgpalleteno |= 1 << 6; //obj or bg palette flag
                             if (bgpriority) bgpalleteno |= 1 << 7; //bg-prio flag for sprites
-                            scanlinebuffer[0, pixelplace] = pixel;
+                            var bgpixel = pixel |= 0x20;
+                            scanlinebuffer[0, pixelplace] = bgpixel;
                             scanlinebuffer[1, pixelplace] = bgpalleteno;
                         }
                         else
@@ -529,20 +531,26 @@ namespace pGameboyX
                                 renderpixel = true;
                                 if (pixel == 0) renderpixel = false;
 
-                                if (priority && (scanlinebuffer[0, pixelplace] & 0x20) != 0 && (scanlinebuffer[0, pixelplace] & 0x3) != 0) { renderpixel = false; }
-                                if ((scanlinebuffer[0, pixelplace] & 0x80) != 0) {renderpixel = false;}
+                                
                                 if (gbcMode)
                                 {
-                                    if (((scanlinebuffer[1, pixelplace] >> 7) & 1) != 0) { renderpixel = false; } // bg prio flag packed with pallete byte
-                                    if ((lcdc & BgDisplayOn) == 0) { renderpixel = true; }
-                                    if (((scanlinebuffer[1, pixelplace] >> 5) & 1) != 0) { renderpixel = false; } // sprite prio flag packed with palette byte     
+                                    if (((scanlinebuffer[1, pixelplace] & 0x80) != 0) && (scanlinebuffer[0, pixelplace] & 0x3) != 0) { renderpixel = false; } // bg prio flag packed with pallete byte
+                                    if (((scanlinebuffer[1, pixelplace] & 0x80) == 0))
+                                    {
+                                        if (priority && (scanlinebuffer[0, pixelplace] & 0x20) != 0 && (scanlinebuffer[0, pixelplace] & 0x3) != 0) { renderpixel = false; }
+                                    }
+                 
+                                }
+                                else
+                                {
+                                    if (priority && (scanlinebuffer[0, pixelplace] & 0x20) != 0 && (scanlinebuffer[0, pixelplace] & 0x3) != 0) { renderpixel = false; }
+                                    if ((scanlinebuffer[0, pixelplace] & 0x80) != 0) {renderpixel = false;}
                                 }
                                
                                 if (renderpixel)
                                 {
                                     if (gbcMode)
                                     {
-                                        objpalette |= (1 << 5); // sprite prio flag packed with palette byte     
                                         scanlinebuffer[0, pixelplace] = pixel;
                                         scanlinebuffer[1, pixelplace] = objpalette;
                                     }
@@ -569,7 +577,7 @@ namespace pGameboyX
             {
                 if (gbcMode)
                 {
-                    _framebufferRGB[i + (ly * LCD_width)] = Get32bitRGB(scanlinebuffer[0, i], scanlinebuffer[1, i]);
+                    _framebufferRGB[i + (ly * LCD_width)] = Get32bitRGB(scanlinebuffer[0, i] & 0x3, scanlinebuffer[1, i]);
                 }
                 else
                 {
