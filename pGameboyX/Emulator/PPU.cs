@@ -539,25 +539,28 @@ namespace pGameboyX
                                     {
                                         if (priority && (scanlinebuffer[0, pixelplace] & 0x20) != 0 && (scanlinebuffer[0, pixelplace] & 0x3) != 0) { renderpixel = false; }
                                     }
+                                    if ((scanlinebuffer[0, pixelplace] & 0x10) != 0) {renderpixel = false;}
                  
                                 }
                                 else
                                 {
                                     if (priority && (scanlinebuffer[0, pixelplace] & 0x20) != 0 && (scanlinebuffer[0, pixelplace] & 0x3) != 0) { renderpixel = false; }
-                                    if ((scanlinebuffer[0, pixelplace] & 0x80) != 0) {renderpixel = false;}
+                                    if ((scanlinebuffer[0, pixelplace] & 0x10) != 0) {renderpixel = false;}
                                 }
                                
                                 if (renderpixel)
                                 {
                                     if (gbcMode)
                                     {
-                                        scanlinebuffer[0, pixelplace] = pixel;
+                                        byte spirtePixel = pixel;
+                                        spirtePixel |= 0x10; // is sprite flag packed with palette byte    
+                                        scanlinebuffer[0, pixelplace] = spirtePixel;
                                         scanlinebuffer[1, pixelplace] = objpalette;
                                     }
                                     else
                                     {
                                         byte spirtePixel = pixel;
-                                        spirtePixel |= 0x80; // is sprite flag packed with palette byte    
+                                        spirtePixel |= 0x10; // is sprite flag packed with palette byte    
                                         spirtePixel |= (byte)((flags & 0x10) == 0x10 ? 0x40 : 0);
                                         scanlinebuffer[0, pixelplace] = spirtePixel;
                                     }
